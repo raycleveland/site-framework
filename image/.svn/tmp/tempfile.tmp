@@ -1,0 +1,168 @@
+<<<<<<< .mine
+<?php
+
+class image_XMP
+{
+	private $filename;
+	private $xmp;
+	
+	public function __construct($filename)
+	{
+		if(!stristr($filename, '.jpg') || !is_file($filename))
+			throw new Exception('Please Use a Valid jpeg image to extract XMP');
+		$this->filename = $filename;
+	}
+	
+	public function getXMP()
+	{
+		if(!is_null($this->xmp)) return $this->xmp;
+		
+		$handle = fopen($this->filename, 'rb');
+		$data = '';
+		while(!feof($handle)){
+			$str = fgets($handle);
+			$flag = strstr($str, 'x:xmpmeta');
+			if(!empty($data)){
+				$data .= $str;
+				if($flag) break;
+			}
+			elseif($flag){
+				if(strpos($str, '<') === FALSE){
+					$str = '<' . $str;
+				}
+				$data .= $str;	
+			}
+		}
+		fclose($handle);
+		
+		if(empty($data))
+		{
+			$this->xmp = '';
+		}
+		else
+		{
+			$data = "<?xml version=\"1.0\"?>\n" . $this->getTagFromRegex('x:xmpmeta', $data);
+			$this->xmp = simplexml_load_string($data);
+			$namespaces = $this->xmp->getNamespaces(true);
+			foreach ($namespaces as $key => $val) {
+				$this->xmp->registerXPathNamespace($key, $val);
+			}
+		}
+		return $this->xmp;
+	}
+	
+    public function getField($field)
+    {
+        return ($this->getXMP() == '')
+			? '' : $this->xmp->xpath("//dc:$field//rdf:li");
+    }
+    
+    public function getImplodedField($field)
+    {
+    	$field = $this->getField($field);
+    	if(empty($field)) return '';
+    	return implode("\n", $field);
+    }
+	
+	public function getSubjects()
+	{
+		return $this->getField('subject');
+	}
+	
+	public function getDescription()
+	{
+		return $this->getImplodedField('description');
+	}
+	
+	public function getTitle()
+    {
+        return $this->getImplodedField('title');
+    }
+	
+	private function getTagFromRegex($tag_str, $str, $contents_only = false)
+	{
+		$pattern = '#<' . $tag_str . '[^>]*>(.*?)</' . $tag_str . '>#ms';
+		preg_match($pattern, $str, $matches);
+		if(empty($matches)) return '';
+		return ($contents_only)? $matches[1] : $matches[0];
+	}
+=======
+<?php
+
+class image_XMP
+{
+	private $filename;
+	private $xmp;
+	
+	public function __construct($filename)
+	{
+		if(stripos($file, '.jpg') === FALSE || !is_file($filename))
+			throw new Exception('Please Use a Valid jpeg image to extract XMP');
+		$this->filename = $filename;
+	}
+	
+	public function getXMP()
+	{
+		if(!empty($this->xmp)) return $this->xmp;
+		
+		#$data = file_get_contents($this->filename);
+		$handle = fopen($this->filename, 'rb');
+		$data = '';
+		while(!feof($handle)){
+			$str = fgets($handle);
+			$flag = strstr($str, 'x:xmpmeta');
+			if(!empty($data)){
+				$data .= $str;
+				if($flag) break;
+			}
+			elseif($flag){
+				$data .= $str;	
+			}
+		}
+		fclose($handle);
+		$data = "<?xml version=\"1.0\"?>\n" . $this->getTagFromRegex('x:xmpmeta', $data);
+		$this->xmp = simplexml_load_string($data);
+		$namespaces = $this->xmp->getNamespaces(true);
+        foreach ($namespaces as $key => $val) {
+            $this->xmp->registerXPathNamespace($key, $val);
+        }
+		return $this->xmp;
+	}
+	
+    public function getField($field)
+    {
+        $this->getXMP();
+		return $this->xmp->xpath("//dc:$field//rdf:li");
+    }
+    
+    public function getImplodedField($field)
+    {
+    	$field = $this->getField($field);
+    	if(empty($field)) return '';
+    	return implode("\n", $field);
+    }
+	
+	public function getSubjects()
+	{
+		return $this->getField('subject');
+	}
+	
+	public function getDescription()
+	{
+		return $this->getImplodedField('description');
+	}
+	
+	public function getTitle()
+    {
+        return $this->getImplodedField('title');
+    }
+	
+	private function getTagFromRegex($tag_str, $str, $contents_only = false)
+	{
+		$pattern = '#<' . $tag_str . '[^>]*>(.*?)</' . $tag_str . '>#ms';
+		preg_match($pattern, $str, $matches);
+		if(empty($matches)) return '';
+		return ($contents_only)? $matches[1] : $matches[0];
+	}
+>>>>>>> .r5
+}

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 33
+/repos/framework/!svn/ver/81/util
+END
+util_Curl.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repos/framework/!svn/ver/75/util/util_Curl.class.php
+END
+util_String.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/repos/framework/!svn/ver/80/util/util_String.class.php
+END
+util_Request.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/repos/framework/!svn/ver/74/util/util_Request.class.php
+END
+util_Date.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repos/framework/!svn/ver/80/util/util_Date.class.php
+END
+util_Link.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/repos/framework/!svn/ver/81/util/util_Link.class.php
+END

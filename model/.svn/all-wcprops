@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 34
+/repos/framework/!svn/ver/82/model
+END
+model_RowBase.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/repos/framework/!svn/ver/81/model/model_RowBase.class.php
+END
+model_TableBase.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/repos/framework/!svn/ver/82/model/model_TableBase.class.php
+END

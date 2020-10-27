@@ -1,0 +1,187 @@
+<?php
+
+/**
+ * util_String
+ * 
+ * Utility class for strings
+ * 
+ * @package rays-framework
+ * @author Ray Cleveland
+ * @copyright 2009
+ * @access public
+ */
+class util_String
+{
+	/**
+	 * util_String::camelize()
+	 * 
+     * Converts a string into camel case
+	 * @param mixed $string
+	 * @param bool $first_letter_lower
+	 * @return
+	 */
+	public static function camelize($string, $first_letter_lower = false)
+	{
+		$string = str_replace('_', ' ', trim($string));
+		$string = str_replace(' ', '', ucwords($string));
+		if($first_letter_lower){
+			$len = strlen($string);
+			$string = strtolower(substr($string, 0, 1)) 
+				. substr($string, 1, $len); 
+		}
+		return $string;
+	}
+	
+	/**
+	 * util_String::linkText()
+	 * 
+	 * Turns links within text into actual links
+     * @param mixed $text
+	 * @return
+	 */
+	public static function linkText($text)
+	{
+		$pattern = '/\\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|]/i';
+		$replace = '<a href="\\0">\\0</a>';
+		return preg_replace($pattern, $replace, $text);
+	}
+	
+	/**
+	 * util_String::linkTwitterUser()
+     * 
+	 * Turns any @username in text to a twitter link
+	 * @param mixed $text
+	 * @return
+	 */
+	public static function linkTwitterUser($text)
+	{
+		$pattern = '#^ @([a-zA-Z_0-9]+)#';
+		$replace = '<a href="http://www.twitter.com/\\1">\\0</a>';
+		return preg_replace($pattern, $replace, $text);
+	}
+    
+    /**
+     * util_String::generatePassword()
+     * 
+     * @param integer $password_length The length of the pawssword to return [default 9]
+     * @return String Generated Password
+     * @see http://www.sentosoft.com/free-php-script-password-generator.php
+     */
+    public static function generatePassword($password_length = 9)
+    {   
+        $password = "";
+        list($usec, $sec) = explode(' ', microtime());
+        $seed = (float) $sec + ((float) $usec * 100000);
+        srand($seed);
+        
+        $alfa = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM#@%[-&]";
+        
+        for($i = 0; $i < $password_length; $i ++) {
+        	$password .= $alfa[rand(0, strlen($alfa) - 1)];	
+        }    
+        return $password;   
+    }
+    
+    /**
+     * util_String::shorten()
+     * 
+     * @param string $str
+     * @param integer $n
+     * @param string $ellipsis
+     * @return
+     */
+    public static function truncate($str, $n = 100, $ellipsis = '...')
+    {
+		if ( strlen ( $str ) <= $n )
+		{
+			return $str;
+		}
+		else {
+			return substr ( $str, 0, $n ) . $ellipsis;
+		}
+    }
+    
+    /**
+     * util_String::debug()
+     * 
+     * prints debug output for a variable
+     * 
+     * @param mixed $input
+     * @return void
+     */
+    public static function debug($input)
+    {
+        echo '<pre>';
+        if(is_array($input) || is_object($input)){
+            print_r($input);
+        } else {
+            var_dump($input);
+        }
+        echo '</pre>';
+    }
+	
+    /**
+     * util_String::containsNumbers()
+     * 
+     * @param mixed $string
+     * @return Whether or not a string contains numbers
+     */
+    public static function containsNumbers($string)
+    {
+        $length = strlen($string);
+        for($i = 0; $i <= $length; $i++)
+        {
+            if(is_numeric(substr($string, $i, 1))){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * util_String::pluralize()
+     *
+     * pluralizes a string with S
+     *  
+     * @param mixed $string
+     * @param mixed $count
+     * @return
+     */
+    public static function pluralize($string, $count)
+    {
+        if($count <> 1){
+            $string .= 's';
+        }
+        return $string;
+    }    
+
+    /**
+     * util_String::makeSlug()
+     *
+     * Make a url slug out of a string
+     *  
+     * @param String $string
+     * @return
+     */
+    public static function makeSlug($string)
+    {
+        $replacements = array(
+	        '&' => '',
+	        '(' => '',
+	        ')' => '',
+	        '[' => '',
+	        ']' => '',
+	        '<' => '',
+	        '>' => '',
+	        '{' => '',
+	        '}' => '',
+	        '"' => '',
+	        '\'' => '',
+	        '.' => '',
+	        ' ' => '-',
+	        '--' => '-',
+    	);
+    	$slug = str_replace(array_keys($replacements), array_values($replacements), strtolower(trim($string)));
+        return $slug;
+    }
+}
